@@ -1,0 +1,17 @@
+require 'json'
+require 'tournament'
+FILE_NAME = './matches.json'
+task default: %w[tournament]
+
+task :tournament do
+  if File.exists?(FILE_NAME)
+    begin
+      data = JSON.parse(File.read(FILE_NAME), {:symbolize_names => true})
+      Tournament.new(data).play!
+    rescue JSON::ParserError
+      puts 'ERROR! Please provide a valid json'
+    end
+  else
+    puts "ERROR! #{FILE_NAME} is not a valid path/filename"
+  end
+end
